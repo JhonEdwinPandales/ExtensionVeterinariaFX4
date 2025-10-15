@@ -2,7 +2,6 @@ package org.example.extensionveterinariafx4.model;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class Mascota {
     protected String nombre;
@@ -26,114 +25,56 @@ public abstract class Mascota {
     }
 
     public CategoriaEdad calcularCategoriaEdad() {
-        if (edadMeses < 12) {
-            return CategoriaEdad.CACHORRO_JOVEN;
-        } else if (edadMeses < 84) {
-            return CategoriaEdad.ADULTO;
-        } else {
-            return CategoriaEdad.SENIOR;
-        }
+        if (edadMeses < 12) return CategoriaEdad.CACHORRO_JOVEN;
+        if (edadMeses < 84) return CategoriaEdad.ADULTO;
+        return CategoriaEdad.SENIOR;
     }
 
-    // ----------------------------------------------------
-    // MÉTODOS ÚTILES (para pruebas)
-    // ----------------------------------------------------
-
-    /**
-     * Calcula costo de la consulta aplicando reglas simples:
-     * - base: 50000
-     * - urgencia: *1.5
-     * - si es senior: *1.2
-     * - si es Ave o Reptil: *1.2 (recargo)
-     * - control sobre aves: descuento 10% (multiplica por 0.9)
-     * - vacunación no aplica descuento por defecto
-     */
-    public double calcularCostoConsulta(TipoConsulta tipoConsulta) {
+    // Calcula costo según reglas del enunciado (sencillas y coherentes)
+    public double calcularCostoConsulta(TipoConsulta tipo) {
         double base = 50000.0;
         double total = base;
 
-        // recargo por especie (aves y reptiles)
-        if (this instanceof Ave || this instanceof Reptil) {
-            total *= 1.2;
-        }
+        // especie recargo: aves y reptiles +20%
+        if (this instanceof Ave || this instanceof Reptil) total *= 1.2;
 
-        // recargo por edad senior
-        if (this.getCategoriaEdad() == CategoriaEdad.SENIOR) {
-            total *= 1.2;
-        }
+        // edad senior +20%
+        if (this.categoriaEdad == CategoriaEdad.SENIOR) total *= 1.2;
 
         // tipo de consulta
-        if (tipoConsulta == TipoConsulta.URGENCIA) {
-            total *= 1.5;
-        } else if (tipoConsulta == TipoConsulta.CONTROL) {
-            // descuento especial para aves adultas
-            if (this instanceof Ave && this.getCategoriaEdad() == CategoriaEdad.ADULTO) {
-                total *= 0.9; // 10% descuento
-            }
-        } else if (tipoConsulta == TipoConsulta.VACUNACION) {
-            // ninguna regla extra por defecto
-        }
+        if (tipo == TipoConsulta.URGENCIA) total *= 1.5;
+        if (tipo == TipoConsulta.CONTROL && this instanceof Ave && this.categoriaEdad == CategoriaEdad.ADULTO) total *= 0.9; // descuento 10%
 
-        // redondear a 2 decimales
+        // redondear
         return Math.round(total * 100.0) / 100.0;
     }
 
-    /**
-     * Calcula dosis (mg) = pesoKg * factor.
-     * Lanza IllegalArgumentException si factor <= 0 o peso <= 0
-     */
     public double calcularDosis(double mgPorKg) {
-        if (mgPorKg <= 0 || this.pesoKg <= 0) {
-            throw new IllegalArgumentException("Parámetros inválidos para calcular dosis");
-        }
-        return Math.round((pesoKg * mgPorKg) * 100.0) / 100.0;
+        if (mgPorKg <= 0 || this.pesoKg <= 0) throw new IllegalArgumentException("Parámetros inválidos");
+        return Math.round((this.pesoKg * mgPorKg) * 100.0) / 100.0;
     }
 
-    /**
-     * Próxima vacunación:
-     * - aves: +8 meses
-     * - perros/gatos/otros: +12 meses
-     */
-    public LocalDate calcularProximaVacunacion(LocalDate fechaActual) {
-        if (this instanceof Ave) {
-            return fechaActual.plusMonths(8);
-        } else {
-            return fechaActual.plusMonths(12);
-        }
+    public LocalDate calcularProximaVacunacion(LocalDate fecha) {
+        if (this instanceof Ave) return fecha.plusMonths(8);
+        return fecha.plusMonths(12);
     }
 
-    /**
-     * Prioridad simple: urgencia -> 1, otro -> 2
-     */
-    public static int obtenerPrioridad(String tipo) {
-        if (tipo == null) return 2;
-        if (tipo.equalsIgnoreCase("urgencia") || tipo.equalsIgnoreCase("URGENCIA") || tipo.equalsIgnoreCase("URGENTE")) {
-            return 1;
-        }
-        return 2;
+    public static int obtenerPrioridad(Consulta consulta) {
+        if (consulta == null) return 2;
+        return consulta.getTipo() == TipoConsulta.URGENCIA ? 1 : 2;
     }
 
-    /**
-     * Dados una lista de mascotas, devuelve el responsable más frecuente (por nombre).
-     * Retorna null si la lista es vacía.
-     */
-    public static Responsable obtenerResponsableMasFrecuente(List<Mascota> lista) {
-        if (lista == null || lista.isEmpty()) return null;
-        Map<String, Integer> map = new HashMap<>();
-        Map<String, Responsable> mapResp = new HashMap<>();
-        for (Mascota m : lista) {
-            if (m == null || m.getResponsable() == null) continue;
-            String key = m.getResponsable().getNombreCompleto();
-            map.merge(key, 1, Integer::sum);
-            mapResp.putIfAbsent(key, m.getResponsable());
+    public static Responsable obtenerResponsableMasFrecuente(List<Consulta> consultas) {
+        if (consultas == null || consultas.isEmpty()) return null;
+        Map<Responsable, Integer> cnt = new HashMap<>();
+        for (Consulta c : consultas) {
+            if (c.getMascota() == null || c.getMascota().getResponsable() == null) continue;
+            cnt.merge(c.getMascota().getResponsable(), 1, Integer::sum);
         }
-        String mayor = Collections.max(map.entrySet(), Map.Entry.comparingByValue()).getKey();
-        return mapResp.get(mayor);
+        return cnt.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse(null);
     }
 
-    // ----------------------------------------------------
-    // Getters / Setters habituales
-    // ----------------------------------------------------
+    // getters / setters
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 

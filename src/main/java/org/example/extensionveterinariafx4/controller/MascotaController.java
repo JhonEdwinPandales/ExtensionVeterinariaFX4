@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import org.example.extensionveterinariafx4.model.*;
 
 public class MascotaController {
-
     @FXML private TextField txtNombre;
     @FXML private TextField txtRaza;
     @FXML private TextField txtEdad;
@@ -26,7 +25,7 @@ public class MascotaController {
 
     @FXML
     public void initialize() {
-        cmbTipoMascota.getItems().addAll("Perro", "Gato");
+        cmbTipoMascota.getItems().addAll("Perro", "Gato", "Ave", "Reptil");
         cmbTamano.getItems().addAll("PEQUENO", "MEDIANO", "GRANDE");
 
         colNombre.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getNombre()));
@@ -41,42 +40,42 @@ public class MascotaController {
     @FXML
     public void agregarMascota() {
         try {
-            // Capturar los datos del formulario
-            String nombre = txtNombre.getText();
-            String raza = txtRaza.getText();
-            int edad = Integer.parseInt(txtEdad.getText());
-            double peso = Double.parseDouble(txtPeso.getText());
-            String codigo = txtCodigo.getText();
-            String responsableNombre = txtResponsable.getText();
-
-            Responsable responsable = new Responsable();
-            responsable.setNombreCompleto(responsableNombre);
+            String nombre = txtNombre.getText().trim();
+            String raza = txtRaza.getText().trim();
+            int edad = Integer.parseInt(txtEdad.getText().trim());
+            double peso = Double.parseDouble(txtPeso.getText().trim());
+            String codigo = txtCodigo.getText().trim();
+            String responsableNombre = txtResponsable.getText().trim();
+            Responsable responsable = new Responsable(responsableNombre);
 
             String tipo = cmbTipoMascota.getValue();
             Mascota mascota;
 
-            // Creación según tipo
-            if ("Perro".equals(tipo)) {
-                Tamano tamano = Tamano.valueOf(cmbTamano.getValue());
-                mascota = new Perro(nombre, raza, edad, peso, codigo, responsable, tamano, "Intermedio", true);
-            } else if ("Gato".equals(tipo)) {
-                // Valores predeterminados para los atributos del gato
-                EsIndoor indoor = EsIndoor.INDOOR;
-                int horasSueno = 14;
-                String nivelIndependencia = "Alto";
-
-                mascota = new Gato(nombre, raza, edad, peso, codigo, responsable, indoor, horasSueno, nivelIndependencia);
-            } else {
-                lblEstado.setText("⚠️ Selecciona un tipo de mascota.");
-                return;
+            switch (tipo) {
+                case "Perro":
+                    Tamano tam = Tamano.valueOf(cmbTamano.getValue());
+                    mascota = new Perro(nombre, raza, edad, peso, codigo, responsable, tam, "Intermedio", true);
+                    break;
+                case "Gato":
+                    mascota = new Gato(nombre, raza, edad, peso, codigo, responsable, EsIndoor.INDOOR, 14, "Alta");
+                    break;
+                case "Ave":
+                    mascota = new Ave(nombre, raza, edad, peso, codigo, responsable, "Común", true, 10);
+                    break;
+                case "Reptil":
+                    mascota = new Reptil(nombre, raza, edad, peso, codigo, responsable, TipoHabitat.TERRESTRE, 28.0, "MEDIO");
+                    break;
+                default:
+                    lblEstado.setText("Selecciona un tipo válido");
+                    return;
             }
 
             listaMascotas.add(mascota);
-            lblEstado.setText("✅ Mascota agregada correctamente.");
+            lblEstado.setText("Mascota agregada ✓");
             limpiarCampos();
-
         } catch (Exception e) {
-            lblEstado.setText("❌ Error: revisa los datos ingresados.");
+            lblEstado.setText("Error: revisa los datos");
+            e.printStackTrace();
         }
     }
 
@@ -91,3 +90,4 @@ public class MascotaController {
         cmbTamano.getSelectionModel().clearSelection();
     }
 }
+

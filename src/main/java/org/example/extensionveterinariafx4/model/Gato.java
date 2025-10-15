@@ -7,12 +7,21 @@ public class Gato extends Mascota {
 
     public Gato() {}
 
+    // Constructor completo usado por controller/tests
     public Gato(String nombre, String raza, int edadMeses, double pesoKg, String codigoIdentificacion,
                 Responsable responsable, EsIndoor esIndoor, int horasSuenoPromedio, String nivelIndependencia) {
         super(nombre, raza, edadMeses, pesoKg, codigoIdentificacion, responsable);
         this.esIndoor = esIndoor;
         this.horasSuenoPromedio = horasSuenoPromedio;
         this.nivelIndependencia = nivelIndependencia;
+    }
+
+    // Constructor simplificado
+    public Gato(String nombre, String raza, int edadMeses, double pesoKg, String codigoIdentificacion, Responsable responsable) {
+        super(nombre, raza, edadMeses, pesoKg, codigoIdentificacion, responsable);
+        this.esIndoor = EsIndoor.INDOOR;
+        this.horasSuenoPromedio = 14;
+        this.nivelIndependencia = "Media";
     }
 
     public EsIndoor getEsIndoor() { return esIndoor; }
@@ -24,4 +33,5 @@ public class Gato extends Mascota {
     public String getNivelIndependencia() { return nivelIndependencia; }
     public void setNivelIndependencia(String nivelIndependencia) { this.nivelIndependencia = nivelIndependencia; }
 }
+
 

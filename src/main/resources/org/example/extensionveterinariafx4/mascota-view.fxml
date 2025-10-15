@@ -1,36 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.extensionveterinariafx4.controller.MascotaController">
+    <top>
+        <Label text="🐾 Clínica Vida Animal - Gestión de Mascotas"
+               style="-fx-font-size:18px; -fx-padding:10;" BorderPane.alignment="CENTER"/>
+    </top>
 
-    <VBox alignment="CENTER" spacing="10" padding="15">
-        <Label text="Registro de Mascotas" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <center>
+        <VBox spacing="8" padding="Insets(10)" >
+            <GridPane hgap="8" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" />
+                    <ColumnConstraints hgrow="ALWAYS" />
+                </columnConstraints>
 
-        <TextField fx:id="txtNombre" promptText="Nombre"/>
-        <TextField fx:id="txtRaza" promptText="Raza"/>
-        <TextField fx:id="txtEdad" promptText="Edad (meses)"/>
-        <TextField fx:id="txtPeso" promptText="Peso (kg)"/>
-        <TextField fx:id="txtCodigo" promptText="Código de Identificación"/>
-        <TextField fx:id="txtResponsable" promptText="Responsable"/>
+                <Label text="Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtNombre" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-        <ComboBox fx:id="cmbTipoMascota" promptText="Tipo de Mascota"/>
-        <ComboBox fx:id="cmbTamano" promptText="Tamaño (solo para perros)"/>
+                <Label text="Raza:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtRaza" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-        <Button text="Agregar Mascota" onAction="#agregarMascota"/>
+                <Label text="Edad (meses):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtEdad" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-        <TableView fx:id="tablaMascotas" prefHeight="200">
-            <columns>
-                <TableColumn fx:id="colNombre" text="Nombre"/>
-                <TableColumn fx:id="colRaza" text="Raza"/>
-                <TableColumn fx:id="colCategoria" text="Categoría Edad"/>
-            </columns>
-        </TableView>
+                <Label text="Peso (kg):" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtPeso" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-        <Label fx:id="lblEstado" textFill="blue"/>
-    </VBox>
-</AnchorPane>
+                <Label text="Código ID:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtCodigo" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                <Label text="Responsable:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtResponsable" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                <Label text="Tipo (Perro/Gato/Ave/Reptil):" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="cmbTipoMascota" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                <Label text="Tamaño (Perro):" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="cmbTamano" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <Button text="Agregar Mascota" onAction="#agregarMascota" maxWidth="Infinity"/>
+
+            <TableView fx:id="tablaMascotas" prefHeight="220">
+                <columns>
+                    <TableColumn fx:id="colNombre" text="Nombre"/>
+                    <TableColumn fx:id="colRaza" text="Raza"/>
+                    <TableColumn fx:id="colCategoria" text="Categoría Edad"/>
+                </columns>
+            </TableView>
+
+            <Label fx:id="lblEstado"/>
+        </VBox>
+    </center>
+</BorderPane>
+

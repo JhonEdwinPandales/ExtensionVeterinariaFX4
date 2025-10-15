@@ -3,7 +3,7 @@ package org.example.extensionveterinariafx4.model;
 public class Reptil extends Mascota {
     private TipoHabitat tipoHabitat;
     private double temperaturaOptima;
-    private String nivelPeligrosidad; // String según lo pedido
+    private String nivelPeligrosidad; // string según lo pediste
 
     public Reptil() {}
 

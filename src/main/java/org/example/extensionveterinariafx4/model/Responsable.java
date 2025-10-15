@@ -10,7 +10,6 @@ public class Responsable {
 
     public Responsable() {}
 
-    // Constructor sencillo solicitado por los tests
     public Responsable(String nombreCompleto) {
         this.nombreCompleto = nombreCompleto;
     }
@@ -19,13 +18,6 @@ public class Responsable {
         this.nombreCompleto = nombreCompleto;
         this.numeroContacto = numeroContacto;
         this.direccion = direccion;
-    }
-
-    public Responsable(String nombreCompleto, String numeroContacto, String direccion, int puntajeFidelidad) {
-        this.nombreCompleto = nombreCompleto;
-        this.numeroContacto = numeroContacto;
-        this.direccion = direccion;
-        this.puntajeFidelidad = puntajeFidelidad;
     }
 
     public String getNombreCompleto() { return nombreCompleto; }
@@ -51,10 +43,5 @@ public class Responsable {
     @Override
     public int hashCode() {
         return Objects.hash(nombreCompleto);
-    }
-
-    @Override
-    public String toString() {
-        return nombreCompleto;
     }
 }

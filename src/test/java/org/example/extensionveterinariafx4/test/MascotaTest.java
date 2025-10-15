@@ -1,86 +1,110 @@
-package org.example.extensionveterinariafx4;
+package org.example.extensionveterinariafx4.test;
 
 import org.example.extensionveterinariafx4.model.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MascotaTest {
 
-    @Test
-    void testCostoConsultaGeneralPerroJoven() {
-        Mascota perro = new Perro("Rocky", "Labrador", 12, 20.0, "P001", new Responsable("Carlos"));
-        double costo = perro.calcularCostoConsulta(TipoConsulta.GENERAL);
-        assertEquals(30000, costo, 0.01);
+    private Perro perroJoven;
+    private Gato gatoSenior;
+    private Ave aveAdulta;
+    private Reptil reptilAdulto;
+    private Responsable r1, r2;
+
+    @BeforeEach
+    void setUp() {
+        r1 = new Responsable("Carlos");
+        r2 = new Responsable("Laura");
+
+        perroJoven = new Perro("Rex", "Labrador", 10, 15.0, "P001", r1, Tamano.MEDIANO, "Intermedio", true);
+        gatoSenior = new Gato("Michi", "Persa", 120, 5.0, "G002", r2, EsIndoor.INDOOR, 14, "Alta");
+        aveAdulta = new Ave("Piolin", "Canario", 48, 0.3, "A001", r1, "Canto", true, 8);
+        reptilAdulto = new Reptil("Draco", "Iguana", 60, 3.0, "R001", r2, TipoHabitat.TERRESTRE, 28.0, "MEDIO");
     }
 
+    // 1
     @Test
-    void testCostoUrgenciaGatoSenior() {
-        Mascota gato = new Gato("Michi", "Persa", 96, 5.0, "G002", new Responsable("Lucía"));
-        double costo = gato.calcularCostoConsulta(TipoConsulta.URGENCIA);
-        assertTrue(costo > 50000);
+    void costoConsultaGeneralPerroJoven() {
+        double costo = perroJoven.calcularCostoConsulta(TipoConsulta.GENERAL);
+        assertEquals(50000.0, costo, 0.01);
     }
 
+    // 2
     @Test
-    void testDescuentoConsultaAveAdulta() {
-        Mascota ave = new Ave("Piolin", "Canario", 36, 0.2, "A003", new Responsable("Ana"));
-        double costo = ave.calcularCostoConsulta(TipoConsulta.CONTROL);
-        assertTrue(costo < 30000);
+    void costoUrgenciaGatoSenior() {
+        double costo = gatoSenior.calcularCostoConsulta(TipoConsulta.URGENCIA);
+        // senior +20% y urgencia +50% on base
+        assertTrue(costo > 50000.0);
     }
 
+    // 3
     @Test
-    void testCostoVacunacionReptilAdulto() {
-        Mascota reptil = new Reptil("Spike", "Iguana", 60, 3.0, "R004", new Responsable("Pedro"));
-        double costo = reptil.calcularCostoConsulta(TipoConsulta.VACUNACION);
-        assertEquals(40000, costo, 0.01);
+    void descuentoControlAveAdulta() {
+        double costo = aveAdulta.calcularCostoConsulta(TipoConsulta.CONTROL);
+        // base 50000, ave recargo 1.2 => 60000, control + adulto => descuento 10% => 54000
+        assertEquals(54000.0, costo, 0.01);
     }
 
+    // 4
     @Test
-    void testCalculoDosisValida() {
-        Mascota perro = new Perro("Luna", "Beagle", 24, 10.0, "P005", new Responsable("Luis"));
-        double dosis = perro.calcularDosis(2.0);
-        assertEquals(20.0, dosis, 0.01);
+    void costoVacunacionReptilAdulto() {
+        double costo = reptilAdulto.calcularCostoConsulta(TipoConsulta.VACUNACION);
+        // base 50000 * 1.2 (reptil) = 60000
+        assertEquals(60000.0, costo, 0.01);
     }
 
+    // 5
     @Test
-    void testCalculoDosisInvalidaLanzaExcepcion() {
-        Mascota perro = new Perro("Rex", "Boxer", 24, 10.0, "P006", new Responsable("Laura"));
-        assertThrows(IllegalArgumentException.class, () -> perro.calcularDosis(-1.0));
+    void estimacionDosis() {
+        double dosis = perroJoven.calcularDosis(2.0); // 15 kg * 2 = 30 mg
+        assertEquals(30.0, dosis, 0.01);
     }
 
+    // 6
     @Test
-    void testProximaVacunacionPerroYGato12Meses() {
-        Mascota perro = new Perro("Max", "Bulldog", 24, 15.0, "P007", new Responsable("Leo"));
-        LocalDate proxima = perro.calcularProximaVacunacion(LocalDate.of(2025, 1, 1));
-        assertEquals(LocalDate.of(2026, 1, 1), proxima);
+    void excepcionDosisInvalida() {
+        assertThrows(IllegalArgumentException.class, () -> perroJoven.calcularDosis(-1.0));
     }
 
+    // 7
     @Test
-    void testProximaVacunacionAve8Meses() {
-        Mascota ave = new Ave("Kiwi", "Loro", 24, 1.0, "A008", new Responsable("Julia"));
-        LocalDate proxima = ave.calcularProximaVacunacion(LocalDate.of(2025, 1, 1));
-        assertEquals(LocalDate.of(2025, 9, 1), proxima);
+    void proximaVacunacionPerroGato() {
+        LocalDate hoy = LocalDate.of(2024, 1, 1);
+        assertEquals(hoy.plusMonths(12), perroJoven.calcularProximaVacunacion(hoy));
+        assertEquals(hoy.plusMonths(12), gatoSenior.calcularProximaVacunacion(hoy));
     }
 
+    // 8
     @Test
-    void testPrioridadUrgenciaEsUno() {
-        Consulta c = new Consulta(TipoConsulta.URGENCIA, new Perro(), LocalDate.now());
+    void proximaVacunacionAve() {
+        LocalDate hoy = LocalDate.of(2024, 1, 1);
+        assertEquals(hoy.plusMonths(8), aveAdulta.calcularProximaVacunacion(hoy));
+    }
+
+    // 9
+    @Test
+    void prioridadUrgenciaEs1() {
+        Consulta c = new Consulta("C1", LocalDate.now(), gatoSenior, TipoConsulta.URGENCIA, 50000);
         assertEquals(1, c.getPrioridad());
     }
 
+    // 10
     @Test
-    void testResponsableMasFrecuente() {
-        Responsable juan = new Responsable("Juan");
-        Responsable maria = new Responsable("Maria");
-        Mascota perro1 = new Perro("Firulais", "Labrador", 12, 10, "P009", juan);
-        Mascota perro2 = new Perro("Boby", "Beagle", 8, 8, "P010", juan);
-        Mascota gato1 = new Gato("Nina", "Siames", 24, 4, "G011", maria);
+    void responsableMasFrecuente() {
+        List<Consulta> consultas = new ArrayList<>();
+        consultas.add(new Consulta("c1", LocalDate.now(), perroJoven, TipoConsulta.GENERAL, 50000));
+        consultas.add(new Consulta("c2", LocalDate.now(), aveAdulta, TipoConsulta.GENERAL, 50000));
+        consultas.add(new Consulta("c3", LocalDate.now(), new Perro("Toby","P",12,6.0,"P002",r1,Tamano.PEQUENO,"B",false), TipoConsulta.GENERAL, 50000));
 
-        Responsable masFrecuente = Responsable.obtenerMasFrecuente(
-                java.util.List.of(perro1, perro2, gato1)
-        );
-
-        assertEquals("Juan", masFrecuente.getNombreCompleto());
+        Responsable top = Mascota.obtenerResponsableMasFrecuente(consultas);
+        assertNotNull(top);
+        assertEquals("Carlos", top.getNombreCompleto());
     }
 }
