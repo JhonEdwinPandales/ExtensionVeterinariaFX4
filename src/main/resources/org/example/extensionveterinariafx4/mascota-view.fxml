@@ -1,60 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.example.extensionveterinariafx4.controller.MascotaController">
-    <top>
-        <Label text="🐾 Clínica Vida Animal - Gestión de Mascotas"
-               style="-fx-font-size:18px; -fx-padding:10;" BorderPane.alignment="CENTER"/>
-    </top>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.extensionveterinariafx4.MascotaController"
+      spacing="10">
 
-    <center>
-        <VBox spacing="8" padding="Insets(10)" >
-            <GridPane hgap="8" vgap="8">
-                <columnConstraints>
-                    <ColumnConstraints halignment="RIGHT" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                </columnConstraints>
+    <!-- ✅ Padding corregido -->
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10" />
+    </padding>
 
-                <Label text="Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtNombre" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    <Label text="Gestión de Mascotas" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
 
-                <Label text="Raza:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtRaza" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <HBox spacing="10">
+        <Label text="Nombre:"/>
+        <TextField fx:id="nombreField" promptText="Nombre de la mascota" />
+    </HBox>
 
-                <Label text="Edad (meses):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtEdad" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <HBox spacing="10">
+        <Label text="Tipo:"/>
+        <ComboBox fx:id="tipoCombo" prefWidth="150" />
+    </HBox>
 
-                <Label text="Peso (kg):" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtPeso" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    <HBox spacing="10">
+        <Label text="Edad:"/>
+        <TextField fx:id="edadField" promptText="Edad en años" />
+    </HBox>
 
-                <Label text="Código ID:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtCodigo" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    <HBox spacing="10">
+        <Label text="Dueño:"/>
+        <TextField fx:id="duenoField" promptText="Nombre del propietario" />
+    </HBox>
 
-                <Label text="Responsable:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                <TextField fx:id="txtResponsable" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+    <HBox spacing="10">
+        <Label text="Categoría:"/>
+        <ComboBox fx:id="categoriaCombo" prefWidth="150" />
+    </HBox>
 
-                <Label text="Tipo (Perro/Gato/Ave/Reptil):" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-                <ComboBox fx:id="cmbTipoMascota" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+    <HBox spacing="15">
+        <Button text="Agregar Mascota" fx:id="agregarButton" onAction="#agregarMascota"/>
+        <Button text="Eliminar Mascota" fx:id="eliminarButton" onAction="#eliminarMascota"/>
+        <Button text="Calcular Consulta" fx:id="calcularButton" onAction="#calcularConsulta"/>
+    </HBox>
 
-                <Label text="Tamaño (Perro):" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
-                <ComboBox fx:id="cmbTamano" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
-            </GridPane>
+    <TableView fx:id="tablaMascotas" prefHeight="250" prefWidth="500">
+        <columns>
+            <TableColumn fx:id="columnaNombre" text="Nombre" prefWidth="100"/>
+            <TableColumn fx:id="columnaTipo" text="Tipo" prefWidth="100"/>
+            <TableColumn fx:id="columnaEdad" text="Edad" prefWidth="100"/>
+            <TableColumn fx:id="columnaDueno" text="Dueño" prefWidth="150"/>
+        </columns>
+    </TableView>
 
-            <Button text="Agregar Mascota" onAction="#agregarMascota" maxWidth="Infinity"/>
-
-            <TableView fx:id="tablaMascotas" prefHeight="220">
-                <columns>
-                    <TableColumn fx:id="colNombre" text="Nombre"/>
-                    <TableColumn fx:id="colRaza" text="Raza"/>
-                    <TableColumn fx:id="colCategoria" text="Categoría Edad"/>
-                </columns>
-            </TableView>
-
-            <Label fx:id="lblEstado"/>
-        </VBox>
-    </center>
-</BorderPane>
-
+</VBox>

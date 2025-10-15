@@ -24,3 +24,4 @@ public class Perro extends Mascota {
     public boolean isNecesitaPaseosDiarios() { return necesitaPaseosDiarios; }
     public void setNecesitaPaseosDiarios(boolean necesitaPaseosDiarios) { this.necesitaPaseosDiarios = necesitaPaseosDiarios; }
 }
+

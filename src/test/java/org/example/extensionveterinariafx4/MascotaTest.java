@@ -1,4 +1,4 @@
-package org.example.extensionveterinariafx4.test;
+package org.example.extensionveterinariafx4;
 
 import org.example.extensionveterinariafx4.model.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,15 +40,13 @@ public class MascotaTest {
     @Test
     void costoUrgenciaGatoSenior() {
         double costo = gatoSenior.calcularCostoConsulta(TipoConsulta.URGENCIA);
-        // senior +20% y urgencia +50% on base
         assertTrue(costo > 50000.0);
     }
 
     // 3
     @Test
     void descuentoControlAveAdulta() {
-        double costo = aveAdulta.calcularCostoConsulta(TipoConsulta.CONTROL);
-        // base 50000, ave recargo 1.2 => 60000, control + adulto => descuento 10% => 54000
+        double costo = aveAdulta.calcularCostoConsulta(TipoConsulta.CONTROL_RUTINARIO);
         assertEquals(54000.0, costo, 0.01);
     }
 
@@ -56,14 +54,13 @@ public class MascotaTest {
     @Test
     void costoVacunacionReptilAdulto() {
         double costo = reptilAdulto.calcularCostoConsulta(TipoConsulta.VACUNACION);
-        // base 50000 * 1.2 (reptil) = 60000
         assertEquals(60000.0, costo, 0.01);
     }
 
     // 5
     @Test
     void estimacionDosis() {
-        double dosis = perroJoven.calcularDosis(2.0); // 15 kg * 2 = 30 mg
+        double dosis = perroJoven.calcularDosis(2.0); // 15 kg * 2 = 30
         assertEquals(30.0, dosis, 0.01);
     }
 

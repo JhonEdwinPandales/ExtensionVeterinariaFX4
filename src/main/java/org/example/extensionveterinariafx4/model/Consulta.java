@@ -30,6 +30,4 @@ public class Consulta {
     public int getPrioridad() {
         return tipo == TipoConsulta.URGENCIA ? 1 : 2;
     }
-
-    // getters/setters...
 }

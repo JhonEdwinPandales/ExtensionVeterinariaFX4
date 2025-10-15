@@ -1,7 +1,9 @@
 package org.example.extensionveterinariafx4.model;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class Mascota {
     protected String nombre;
@@ -30,22 +32,23 @@ public abstract class Mascota {
         return CategoriaEdad.SENIOR;
     }
 
-    // Calcula costo según reglas del enunciado (sencillas y coherentes)
+    /**
+     * Reglas (implementación simple y coherente con enunciado):
+     * base = 50000
+     * aves/reptiles: +20%
+     * senior: +20%
+     * urgencia: +50%
+     * control + ave adulta: descuento 10%
+     */
     public double calcularCostoConsulta(TipoConsulta tipo) {
         double base = 50000.0;
         double total = base;
 
-        // especie recargo: aves y reptiles +20%
         if (this instanceof Ave || this instanceof Reptil) total *= 1.2;
-
-        // edad senior +20%
         if (this.categoriaEdad == CategoriaEdad.SENIOR) total *= 1.2;
-
-        // tipo de consulta
         if (tipo == TipoConsulta.URGENCIA) total *= 1.5;
-        if (tipo == TipoConsulta.CONTROL && this instanceof Ave && this.categoriaEdad == CategoriaEdad.ADULTO) total *= 0.9; // descuento 10%
+        if (tipo == TipoConsulta.CONTROL_RUTINARIO && this instanceof Ave && this.categoriaEdad == CategoriaEdad.ADULTO) total *= 0.9;
 
-        // redondear
         return Math.round(total * 100.0) / 100.0;
     }
 
@@ -74,7 +77,7 @@ public abstract class Mascota {
         return cnt.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse(null);
     }
 
-    // getters / setters
+    // getters/setters
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 

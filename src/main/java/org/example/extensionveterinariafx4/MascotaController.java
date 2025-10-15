@@ -1,4 +1,4 @@
-package org.example.extensionveterinariafx4.controller;
+package org.example.extensionveterinariafx4;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -90,4 +90,3 @@ public class MascotaController {
         cmbTamano.getSelectionModel().clearSelection();
     }
 }
-
