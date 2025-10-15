@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.extensionveterinariafx4.controller.MascotaController">
+
+    <VBox alignment="CENTER" spacing="10" padding="15">
+        <Label text="Registro de Mascotas" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+        <TextField fx:id="txtNombre" promptText="Nombre"/>
+        <TextField fx:id="txtRaza" promptText="Raza"/>
+        <TextField fx:id="txtEdad" promptText="Edad (meses)"/>
+        <TextField fx:id="txtPeso" promptText="Peso (kg)"/>
+        <TextField fx:id="txtCodigo" promptText="Código de Identificación"/>
+        <TextField fx:id="txtResponsable" promptText="Responsable"/>
+
+        <ComboBox fx:id="cmbTipoMascota" promptText="Tipo de Mascota"/>
+        <ComboBox fx:id="cmbTamano" promptText="Tamaño (solo para perros)"/>
+
+        <Button text="Agregar Mascota" onAction="#agregarMascota"/>
+
+        <TableView fx:id="tablaMascotas" prefHeight="200">
+            <columns>
+                <TableColumn fx:id="colNombre" text="Nombre"/>
+                <TableColumn fx:id="colRaza" text="Raza"/>
+                <TableColumn fx:id="colCategoria" text="Categoría Edad"/>
+            </columns>
+        </TableView>
+
+        <Label fx:id="lblEstado" textFill="blue"/>
+    </VBox>
+</AnchorPane>
